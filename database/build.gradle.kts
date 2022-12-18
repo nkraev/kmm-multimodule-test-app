@@ -8,9 +8,14 @@ val sqlDelightVersion = "1.5.3"
 
 kotlin {
     android()
-    iosX64()
-    iosArm64()
-    iosSimulatorArm64()
+
+    listOf(
+        iosX64(), iosArm64(), iosSimulatorArm64()
+    ).map {
+        it.compilations.forEach { compilation ->
+            compilation.kotlinOptions.freeCompilerArgs += listOf("-linker-options", "-lsqlite3")
+        }
+    }
 
     sourceSets {
         val commonMain by getting {
@@ -47,4 +52,5 @@ sqldelight {
     database("AppDatabase") {
         packageName = "com.example.wbdtestapp.database"
     }
+    linkSqlite = true
 }

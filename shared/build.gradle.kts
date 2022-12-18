@@ -1,18 +1,44 @@
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
+    kotlin("native.cocoapods")
+}
+
+kotlin.cocoapods {
+    // Required properties
+    // Specify the required Pod version here. Otherwise, the Gradle project version is used.
+    version = "1.0"
+    summary = "Some description for a Kotlin/Native module"
+    homepage = "Link to a Kotlin/Native module homepage"
+
+    ios.deploymentTarget = "16.2"
+
+    // Optional properties
+    // Configure the Pod name here instead of changing the Gradle project name
+    name = "Shared"
+
+    framework {
+        // Required properties
+        // Framework name configuration. Use this property instead of deprecated 'frameworkName'
+        baseName = "shared"
+
+        // Optional properties
+        // Dynamic framework support
+        isStatic = false
+        // Dependency export
+        export(project(":database"))
+        export(project(":model"))
+        export(project(":network"))
+        transitiveExport = false // This is default.
+    }
 }
 
 kotlin {
     android()
 
-    listOf(
-        iosX64(), iosArm64(), iosSimulatorArm64()
-    ).forEach {
-        it.binaries.framework {
-            baseName = "shared"
-        }
-    }
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     sourceSets {
         val commonMain by getting {
