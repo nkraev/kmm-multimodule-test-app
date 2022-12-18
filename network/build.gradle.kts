@@ -14,16 +14,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(project(":model"))
-                implementation("io.ktor:ktor-client-core:$ktorVersion")
-                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                api(project(":model"))
+                api("io.ktor:ktor-client-core:$ktorVersion")
             }
         }
     }
 }
 
 android {
-    namespace = "com.example.wbdtestapp"
+    namespace = "com.example.wbdtestapp.network"
     compileSdk = 33
 }

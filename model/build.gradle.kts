@@ -11,6 +11,6 @@ kotlin {
 }
 
 android {
-    namespace = "com.example.wbdtestapp"
+    namespace = "com.example.wbdtestapp.model"
     compileSdk = 33
 }
