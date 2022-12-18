@@ -16,3 +16,5 @@ dependencyResolutionManagement {
 rootProject.name = "WBDTestApp"
 include(":androidApp")
 include(":shared")
+include(":network")
+include(":model")
