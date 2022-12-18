@@ -12,4 +12,4 @@ data class PhotoPage(
 )
 
 @Serializable
-data class Photo(val id: String, val owner: String, val secret: String, val server: String)
+data class Photo(val id: Long, val owner: String, val secret: String, val server: String)

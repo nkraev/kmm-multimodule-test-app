@@ -21,6 +21,7 @@ kotlin {
                 implementation(project(":model"))
                 api(project(":database"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation("com.squareup.sqldelight:coroutines-extensions:1.5.3")
             }
         }
         val commonTest by getting {

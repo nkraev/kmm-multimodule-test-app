@@ -2,7 +2,8 @@ CREATE TABLE Photos (
   id INTEGER PRIMARY KEY NOT NULL,
   owner TEXT NOT NULL,
   secret TEXT NOT NULL,
-  server TEXT NOT NULL
+  server TEXT NOT NULL,
+  searchQuery TEXT NOT NULL
 );
 
 CREATE TABLE Requests (
@@ -11,8 +12,11 @@ CREATE TABLE Requests (
 );
 
 CREATE TABLE ImageUrls (
-  id INTEGER PRIMARY KEY NOT NULL,
-  url TEXT NOT NULL
+  id INTEGER NOT NULL,
+  -- can be "preview" or "full"
+  type TEXT NOT NULL,
+  url TEXT NOT NULL,
+  PRIMARY KEY (id, type)
 );
 
 CREATE INDEX Requests_index
@@ -23,10 +27,13 @@ INSERT INTO Requests(query)
 VALUES (?);
 
 addPhotoIntoDb:
-INSERT INTO Photos(id, owner, secret, server)
-VALUES ?;
+INSERT INTO Photos(id, owner, secret, server, searchQuery)
+VALUES (?, ?, ?, ?, ?);
 
 addImageUrlIntoDb:
-INSERT INTO ImageUrls(id, url)
-VALUES (?, ?);
+INSERT INTO ImageUrls(id, type, url)
+VALUES (?, ?, ?);
+
+queryPhotos:
+SELECT * FROM Photos WHERE searchQuery = ?;
 

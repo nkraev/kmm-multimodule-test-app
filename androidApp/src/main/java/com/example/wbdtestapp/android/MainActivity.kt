@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.example.wbdtestapp.di.Dependencies
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -42,15 +43,9 @@ fun GreetingView(text: String, dependencies: Dependencies) {
         }, onClick = {
             scope.launch {
                 println(">> Executing query=$searchQuery...")
-                kotlin.runCatching {
-                    dependencies.photosRepo.getPhotos(searchQuery)
+                dependencies.photosRepo.getPhotos(searchQuery).collectLatest { photos ->
+                    println(">> Received in UI: $photos")
                 }
-                    .onSuccess {
-                        println(">> List of photos: $it")
-                    }
-                    .onFailure {
-                        it.printStackTrace()
-                    }
             }
         })
     }
