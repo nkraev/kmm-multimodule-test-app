@@ -9,13 +9,12 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.wbdtestapp.di.Dependencies
 import kotlinx.coroutines.launch
 
-val dependencies = Dependencies()
 
 class MainActivity : ComponentActivity() {
+    private val dependencies by lazy { Dependencies(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -23,7 +22,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
                 ) {
-                    GreetingView("Test")
+                    GreetingView("Test", dependencies)
                 }
             }
         }
@@ -31,7 +30,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun GreetingView(text: String) {
+fun GreetingView(text: String, dependencies: Dependencies) {
     val scope = rememberCoroutineScope()
     var searchQuery: String by remember { mutableStateOf("sunset") }
 
@@ -54,13 +53,5 @@ fun GreetingView(text: String) {
                     }
             }
         })
-    }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    MyApplicationTheme {
-        GreetingView("Hello, Android!")
     }
 }
