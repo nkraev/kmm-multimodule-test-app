@@ -10,8 +10,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.wbdtestapp.di.photosRepo
+import com.example.wbdtestapp.di.Dependencies
 import kotlinx.coroutines.launch
+
+val dependencies = Dependencies()
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,8 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
                 ) {
                     GreetingView("Test")
                 }
@@ -37,22 +38,22 @@ fun GreetingView(text: String) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = text)
         TextField(value = searchQuery, onValueChange = { searchQuery = it })
-        Button(
-            enabled = searchQuery.isNotEmpty(),
-            content = {
-                Text("Click me to send an API request")
-            },
-            onClick = {
-                scope.launch {
-                    println(">> Executing query=$searchQuery...")
-                    kotlin.runCatching {
-                        photosRepo.getPhotos(searchQuery)
-                    }.onFailure {
+        Button(enabled = searchQuery.isNotEmpty(), content = {
+            Text("Click me to send an API request")
+        }, onClick = {
+            scope.launch {
+                println(">> Executing query=$searchQuery...")
+                kotlin.runCatching {
+                    dependencies.photosRepo.getPhotos(searchQuery)
+                }
+                    .onSuccess {
+                        println(">> List of photos: $it")
+                    }
+                    .onFailure {
                         it.printStackTrace()
                     }
-                }
             }
-        )
+        })
     }
 }
 

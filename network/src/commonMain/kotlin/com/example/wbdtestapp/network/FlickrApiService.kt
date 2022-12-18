@@ -1,16 +1,23 @@
 package com.example.wbdtestapp.network
 
-import com.example.wbdtestapp.model.Photo
+import com.example.wbdtestapp.model.PhotoResponse
 import com.example.wbdtestapp.network.model.Endpoints
-import com.example.wbdtestapp.network.model.PhotoResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.serialization.kotlinx.json.*
+import kotlinx.serialization.json.Json
 
-class FlickrApiService(private val httpClient: HttpClient) {
-    suspend fun fetchPhotos(query: String): List<Photo> = httpClient.get(Endpoints.photos(query)).let {
-        val body = it.body<PhotoResponse>()
-        println(">> Received body: $body")
-        body.photos.photo
+class FlickrApiService {
+    private val httpClient = HttpClient {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                useAlternativeNames = false
+            })
+        }
     }
+
+    suspend fun fetchPhotos(query: String): PhotoResponse = httpClient.get(Endpoints.photos(query)).body()
 }
