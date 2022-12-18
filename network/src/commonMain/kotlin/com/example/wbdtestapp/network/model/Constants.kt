@@ -9,12 +9,12 @@ private object Constants {
 
 object Endpoints {
     fun photos(query: String): HttpRequestBuilder.() -> Unit = {
-        request {
-            url(Constants.API_URL)
-            parameter("method", "flickr.photos.search")
-            parameter("api_key", Constants.API_KEY)
-            parameter("format", "json")
-            parameter("text", query)
-        }
+        url(Constants.API_URL)
+        parameter("method", "flickr.photos.search")
+        parameter("api_key", Constants.API_KEY)
+        parameter("format", "json")
+        parameter("text", query)
+        parameter("per_page", 25)
+        parameter("nojsoncallback", 1)
     }
 }

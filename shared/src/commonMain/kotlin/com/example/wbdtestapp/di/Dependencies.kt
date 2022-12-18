@@ -10,7 +10,7 @@ import kotlinx.serialization.json.Json
 private val httpClient = HttpClient {
     install(ContentNegotiation) {
         json(Json {
-            ignoreUnknownKeys = false
+            ignoreUnknownKeys = true
             useAlternativeNames = false
         })
     }
