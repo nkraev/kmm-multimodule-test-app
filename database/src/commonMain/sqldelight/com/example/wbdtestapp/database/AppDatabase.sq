@@ -1,6 +1,32 @@
 CREATE TABLE Photos (
-  id INTEGER NOT NULL,
+  id INTEGER PRIMARY KEY NOT NULL,
   owner TEXT NOT NULL,
   secret TEXT NOT NULL,
   server TEXT NOT NULL
 );
+
+CREATE TABLE Requests (
+  id INTEGER PRIMARY KEY NOT NULL,
+  query TEXT NOT NULL
+);
+
+CREATE TABLE ImageUrls (
+  id INTEGER PRIMARY KEY NOT NULL,
+  url TEXT NOT NULL
+);
+
+CREATE INDEX Requests_index
+ON Requests(query);
+
+addRecentSearch:
+INSERT INTO Requests(query)
+VALUES (?);
+
+addPhotoIntoDb:
+INSERT INTO Photos(id, owner, secret, server)
+VALUES ?;
+
+addImageUrlIntoDb:
+INSERT INTO ImageUrls(id, url)
+VALUES (?, ?);
+
