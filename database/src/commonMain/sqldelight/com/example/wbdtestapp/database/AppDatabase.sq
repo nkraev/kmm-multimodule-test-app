@@ -1,0 +1,6 @@
+CREATE TABLE Photos (
+  id INTEGER NOT NULL,
+  owner TEXT NOT NULL,
+  secret TEXT NOT NULL,
+  server TEXT NOT NULL
+);

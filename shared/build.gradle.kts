@@ -19,6 +19,7 @@ kotlin {
             dependencies {
                 implementation(project(":network"))
                 implementation(project(":model"))
+                implementation(project(":database"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
             }
         }
