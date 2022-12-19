@@ -47,8 +47,14 @@ class SearchResultsViewModel(private val repo: PhotosRepo) : ViewModel() {
     }
 
     fun search(query: String) {
-        _state.postValue(SearchState.Loading)
-        inputs.tryEmit(query)
+        val request = query.trim()
+        if (request.isEmpty()) {
+            _state.value = SearchState.Empty
+            return
+        }
+
+        _state.value = SearchState.Loading
+        inputs.tryEmit(request)
     }
 
 

@@ -7,6 +7,7 @@ import com.example.wbdtestapp.model.PhotoType
 import com.example.wbdtestapp.network.FlickrApiService
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -21,7 +22,7 @@ internal class PhotosRepoImpl(
     )
 
     override suspend fun getPhotos(query: String): Flow<List<Photo>> = withContext(ioDispatcher) {
-//        async { performApiRequest(query) }
+        async { performApiRequest(query) }
 
         databaseQueries.queryPhotos(query).asFlow().map { query ->
             val photos = query.executeAsList()

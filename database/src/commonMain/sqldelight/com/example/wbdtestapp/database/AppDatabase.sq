@@ -25,11 +25,11 @@ INSERT INTO Requests(query)
 VALUES (?);
 
 addPhotoIntoDb:
-INSERT INTO Photos(id, owner, secret, server, searchQuery, title)
+INSERT OR IGNORE INTO Photos(id, owner, secret, server, searchQuery, title)
 VALUES (?, ?, ?, ?, ?, ?);
 
 addImageUrlIntoDb:
-INSERT INTO ImageUrls(id, type, url)
+INSERT OR REPLACE INTO ImageUrls(id, type, url)
 VALUES (?, ?, ?);
 
 queryPhotos:
