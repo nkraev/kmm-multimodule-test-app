@@ -93,7 +93,7 @@ fun SearchResultsScreen(viewModel: SearchResultsViewModel, onNavigateToDetails: 
                     val errorMessage = (state as? SearchState.Error)?.errorMessage
                         ?: "Unknown error, state is null"
                     hostState.showSnackbar(
-                        errorMessage, duration = SnackbarDuration.Long
+                        errorMessage, duration = SnackbarDuration.Short
                     )
                 }
 

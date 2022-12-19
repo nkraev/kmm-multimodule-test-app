@@ -15,6 +15,7 @@ import com.example.wbdtestapp.model.PhotoType
 import com.example.wbdtestapp.repo.PhotosRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -26,11 +27,16 @@ import kotlinx.coroutines.launch
 class SearchResultsViewModel(private val repo: PhotosRepo) : ViewModel() {
     private val _state = MutableLiveData<SearchState>(SearchState.Empty)
     val state: LiveData<SearchState> = _state
-    private val inputs = MutableStateFlow("")
+    private val inputs = MutableStateFlow("dog")
+    private lateinit var job: Job
 
     init {
-        viewModelScope.launch {
-            inputs.filter { it.isNotEmpty() }.debounce(2000)
+        observeInputAndFetchData()
+    }
+
+    private fun observeInputAndFetchData() {
+        job = viewModelScope.launch {
+            inputs.filter { it.isNotEmpty() }.debounce(300)
                 .flatMapLatest { query -> repo.getPhotos(query) }
                 .handleError { _state.postValue(SearchState.Error("${it.message}")) }
                 .collectLatest { photos ->
@@ -55,6 +61,9 @@ class SearchResultsViewModel(private val repo: PhotosRepo) : ViewModel() {
 
         _state.value = SearchState.Loading
         inputs.tryEmit(request)
+        if (job.isCompleted || job.isCompleted) {
+            observeInputAndFetchData()
+        }
     }
 
 
