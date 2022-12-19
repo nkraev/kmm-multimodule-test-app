@@ -3,7 +3,8 @@ CREATE TABLE Photos (
   owner TEXT NOT NULL,
   secret TEXT NOT NULL,
   server TEXT NOT NULL,
-  searchQuery TEXT NOT NULL
+  searchQuery TEXT NOT NULL,
+  title TEXT
 );
 
 CREATE TABLE Requests (
@@ -19,16 +20,13 @@ CREATE TABLE ImageUrls (
   PRIMARY KEY (id, type)
 );
 
-CREATE INDEX Requests_index
-ON Requests(query);
-
 addRecentSearch:
 INSERT INTO Requests(query)
 VALUES (?);
 
 addPhotoIntoDb:
-INSERT INTO Photos(id, owner, secret, server, searchQuery)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO Photos(id, owner, secret, server, searchQuery, title)
+VALUES (?, ?, ?, ?, ?, ?);
 
 addImageUrlIntoDb:
 INSERT INTO ImageUrls(id, type, url)

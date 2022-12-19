@@ -9,14 +9,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil.Coil
 import com.example.wbdtestapp.android.composables.DetailsScreen
 import com.example.wbdtestapp.android.composables.SearchResultsScreen
+import com.example.wbdtestapp.android.imageloader.ImageLoaderHelper
 import com.example.wbdtestapp.android.viewmodel.SearchResultsViewModel
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Coil.setImageLoader(ImageLoaderHelper.get(this))
+
         setContent {
             val navController = rememberNavController()
             MyApplicationTheme {

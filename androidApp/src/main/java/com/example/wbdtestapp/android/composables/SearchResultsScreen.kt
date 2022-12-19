@@ -1,5 +1,6 @@
 package com.example.wbdtestapp.android.composables
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.aspectRatio
@@ -99,7 +100,7 @@ fun SearchResultsScreen(viewModel: SearchResultsViewModel, onNavigateToDetails: 
                 is SearchState.SearchReady -> {
                     val searchReady = (state as? SearchState.SearchReady) ?: return@Column
                     println(">> [Android] Received photos: ${searchReady.photos}")
-                    SearchResults(photos = searchReady.photos)
+                    SearchResults(photos = searchReady.photos, onNavigateToDetails)
                 }
             }
         }
@@ -107,7 +108,7 @@ fun SearchResultsScreen(viewModel: SearchResultsViewModel, onNavigateToDetails: 
 }
 
 @Composable
-fun SearchResults(photos: List<UIPhoto>) {
+fun SearchResults(photos: List<UIPhoto>, onNavigateToDetails: (Long) -> Unit) {
     LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(3), content = {
         items(photos, key = { it.id }) { photo ->
             Column(
@@ -116,10 +117,12 @@ fun SearchResults(photos: List<UIPhoto>) {
                 modifier = Modifier.aspectRatio(1f),
             ) {
                 AsyncImage(
+                    // TODO: fix image loader
                     model = photo.url,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(108.dp),
+                        .height(108.dp)
+                        .clickable { onNavigateToDetails(photo.id) },
                     contentDescription = "Photo from Flickr",
                     contentScale = ContentScale.Crop,
                 )
@@ -134,10 +137,11 @@ fun SearchResults(photos: List<UIPhoto>) {
 fun SearchResultsScreenPreview() {
     SearchResults(
         photos = listOf(
-            UIPhoto(1, "", "Hello"),
+            UIPhoto(1, "https://live.staticflickr.com/65535/52571790747_47fb5fba40_m.jpg", "Hello"),
             UIPhoto(2, "", "World"),
             UIPhoto(3, "", "Oh"),
             UIPhoto(4, "", "Wow"),
-        )
+        ),
+        onNavigateToDetails = {}
     )
 }

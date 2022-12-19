@@ -11,6 +11,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.wbdtestapp.android.extensions.handleError
 import com.example.wbdtestapp.android.uimodel.UIPhoto
 import com.example.wbdtestapp.di.Dependencies
+import com.example.wbdtestapp.model.PhotoType
 import com.example.wbdtestapp.repo.PhotosRepo
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -33,7 +34,13 @@ class SearchResultsViewModel(private val repo: PhotosRepo) : ViewModel() {
                 .flatMapLatest { query -> repo.getPhotos(query) }
                 .handleError { _state.postValue(SearchState.Error("${it.message}")) }
                 .collectLatest { photos ->
-                    val uiPhotos = photos.map { photo -> UIPhoto(photo.id, "", "") }
+                    val uiPhotos = photos.map { photo ->
+                        UIPhoto(
+                            photo.id,
+                            repo.getUrl(photo, PhotoType.PREVIEW),
+                            photo.title ?: "Unknown"
+                        )
+                    }
                     _state.postValue(SearchState.SearchReady(uiPhotos))
                 }
         }

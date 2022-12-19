@@ -12,4 +12,8 @@ data class PhotoPage(
 )
 
 @Serializable
-data class Photo(val id: Long, val owner: String, val secret: String, val server: String)
+data class Photo(val id: Long, val owner: String, val secret: String, val server: String, val title: String?)
+
+enum class PhotoType {
+    PREVIEW, FULL
+}
