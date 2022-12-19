@@ -20,7 +20,7 @@ internal class PhotosRepoImpl(
     )
 
     override suspend fun getPhotos(query: String): Flow<List<Photo>> = withContext(ioDispatcher) {
-         async { performApiRequest(query) }
+         // async { performApiRequest(query) }
 
         databaseQueries.queryPhotos(query).asFlow().map { query ->
             val photos = query.executeAsList()

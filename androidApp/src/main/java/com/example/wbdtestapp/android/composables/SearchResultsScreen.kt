@@ -1,7 +1,15 @@
 package com.example.wbdtestapp.android.composables
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -25,8 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.example.wbdtestapp.android.uimodel.UIPhoto
 import com.example.wbdtestapp.android.viewmodel.SearchResultsViewModel
 import com.example.wbdtestapp.android.viewmodel.SearchState
 
@@ -88,16 +99,45 @@ fun SearchResultsScreen(viewModel: SearchResultsViewModel, onNavigateToDetails: 
                 is SearchState.SearchReady -> {
                     val searchReady = (state as? SearchState.SearchReady) ?: return@Column
                     println(">> [Android] Received photos: ${searchReady.photos}")
+                    SearchResults(photos = searchReady.photos)
                 }
             }
         }
     }
 }
 
+@Composable
+fun SearchResults(photos: List<UIPhoto>) {
+    LazyVerticalGrid(modifier = Modifier.fillMaxSize(), columns = GridCells.Fixed(3), content = {
+        items(photos, key = { it.id }) { photo ->
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.aspectRatio(1f),
+            ) {
+                AsyncImage(
+                    model = photo.url,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(108.dp),
+                    contentDescription = "Photo from Flickr",
+                    contentScale = ContentScale.Crop,
+                )
+                Text(text = photo.title)
+            }
+        }
+    })
+}
+
 @Preview
 @Composable
 fun SearchResultsScreenPreview() {
-    SearchResultsScreen(
-        onNavigateToDetails = {}, viewModel = viewModel(factory = SearchResultsViewModel.Factory)
+    SearchResults(
+        photos = listOf(
+            UIPhoto(1, "", "Hello"),
+            UIPhoto(2, "", "World"),
+            UIPhoto(3, "", "Oh"),
+            UIPhoto(4, "", "Wow"),
+        )
     )
 }
