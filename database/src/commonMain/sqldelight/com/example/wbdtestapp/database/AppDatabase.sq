@@ -35,3 +35,6 @@ VALUES (?, ?, ?);
 queryPhotos:
 SELECT * FROM Photos WHERE searchQuery = ?;
 
+findPhotoById:
+SELECT * FROM Photos WHERE id = ?;
+

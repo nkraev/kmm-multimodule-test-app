@@ -1,12 +1,12 @@
 package com.example.wbdtestapp.repo
 
+import com.example.wbdtestapp.Mapper
 import com.example.wbdtestapp.database.AppDatabaseQueries
 import com.example.wbdtestapp.model.Photo
 import com.example.wbdtestapp.model.PhotoType
 import com.example.wbdtestapp.network.FlickrApiService
 import com.squareup.sqldelight.runtime.coroutines.asFlow
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -26,13 +26,18 @@ internal class PhotosRepoImpl(
         databaseQueries.queryPhotos(query).asFlow().map { query ->
             val photos = query.executeAsList()
             println(">> Received photos from DB: $photos")
-            photos.map { Photo(it.id, it.owner, it.secret, it.server, it.title) }
+            photos.map(Mapper::mapPhotoFromDao)
         }
     }
 
     override fun getUrl(photo: Photo, type: PhotoType): String {
         val sizeSuffix = imageType[type]
         return "https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_$sizeSuffix.jpg"
+    }
+
+    override fun getUrl(photoId: Long, type: PhotoType): String {
+        val photo = databaseQueries.findPhotoById(photoId).executeAsOne()
+        return getUrl(Mapper.mapPhotoFromDao(photo), type)
     }
 
     private suspend fun performApiRequest(query: String) {

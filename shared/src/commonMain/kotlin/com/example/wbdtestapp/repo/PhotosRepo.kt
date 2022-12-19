@@ -9,4 +9,6 @@ interface PhotosRepo {
     suspend fun getPhotos(query: String): Flow<List<Photo>>
 
     fun getUrl(photo: Photo, type: PhotoType): String
+
+    fun getUrl(photoId: Long, type: PhotoType): String
 }
