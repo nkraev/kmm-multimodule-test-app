@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.wbdtestapp.android.uimodel.UIPhoto
 import com.example.wbdtestapp.di.Dependencies
 import com.example.wbdtestapp.model.PhotoType
 import com.example.wbdtestapp.repo.PhotosRepo
@@ -16,8 +17,12 @@ class DetailsViewModel(private val repo: PhotosRepo) : ViewModel() {
     val state: LiveData<DetailsState> = _state
 
     fun getUrl(imageId: Long) {
-        val url = repo.getUrl(imageId, PhotoType.FULL)
-        _state.value = DetailsState.ImageReady(url)
+        val photo = repo.getFullPhoto(imageId)
+        _state.value = DetailsState.ImageReady(
+            UIPhoto(
+                imageId, repo.getUrl(photo, PhotoType.FULL), photo.title ?: "Unknown"
+            )
+        )
     }
 
 
@@ -34,5 +39,5 @@ class DetailsViewModel(private val repo: PhotosRepo) : ViewModel() {
 
 sealed class DetailsState {
     object Loading : DetailsState()
-    data class ImageReady(val url: String) : DetailsState()
+    data class ImageReady(val photo: UIPhoto) : DetailsState()
 }

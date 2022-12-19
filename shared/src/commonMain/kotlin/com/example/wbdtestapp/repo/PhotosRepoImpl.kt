@@ -35,9 +35,9 @@ internal class PhotosRepoImpl(
         return "https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}_$sizeSuffix.jpg"
     }
 
-    override fun getUrl(photoId: Long, type: PhotoType): String {
+    override fun getFullPhoto(photoId: Long): Photo {
         val photo = databaseQueries.findPhotoById(photoId).executeAsOne()
-        return getUrl(Mapper.mapPhotoFromDao(photo), type)
+        return Mapper.mapPhotoFromDao(photo)
     }
 
     private suspend fun performApiRequest(query: String) {

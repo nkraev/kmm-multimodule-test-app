@@ -10,5 +10,5 @@ interface PhotosRepo {
 
     fun getUrl(photo: Photo, type: PhotoType): String
 
-    fun getUrl(photoId: Long, type: PhotoType): String
+    fun getFullPhoto(photoId: Long): Photo
 }

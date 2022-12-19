@@ -17,12 +17,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.wbdtestapp.android.uimodel.UIPhoto
 import com.example.wbdtestapp.android.viewmodel.DetailsState
 import com.example.wbdtestapp.android.viewmodel.DetailsViewModel
 
@@ -64,24 +65,25 @@ fun FullScreen(imageId: Long, viewModel: DetailsViewModel, paddingValues: Paddin
     when (state) {
         is DetailsState.Loading -> CircularProgressIndicator()
         is DetailsState.ImageReady -> FullScreenImage(
-            url = (state as DetailsState.ImageReady).url, paddingValues
+            photo = (state as DetailsState.ImageReady).photo, paddingValues
         )
     }
 }
 
 @Composable
-fun FullScreenImage(url: String, paddingValues: PaddingValues) {
+fun FullScreenImage(photo: UIPhoto, paddingValues: PaddingValues) {
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
     ) {
         AsyncImage(
-            model = url,
+            model = photo.url,
             contentDescription = "Full screen image from Flickr selected on the previous page",
             modifier = Modifier.fillMaxWidth()
         )
-        Text(text = "")
+        Text(text = photo.title)
     }
 }
 
