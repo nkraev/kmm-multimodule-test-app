@@ -5,11 +5,12 @@ struct ContentView: View {
     @StateObject private var viewModel = ViewModel()
 
     var body: some View {
-        Button("Request data from API", action: {
-            Task { await viewModel.executeQuery() }
+        Button("Search for mountain", action: {
+            viewModel.searchTerm = "mountain"
         })
+        
         List(viewModel.result, id: \.id) {
-            Text($0.id)
+            Text("\($0.id)")
         }
 	}
 }

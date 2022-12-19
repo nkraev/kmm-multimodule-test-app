@@ -2,6 +2,7 @@ plugins {
     kotlin("multiplatform")
     id("com.android.library")
     kotlin("native.cocoapods")
+    id("com.rickclephas.kmp.nativecoroutines").version("0.13.1")
 }
 
 kotlin.cocoapods {
@@ -25,11 +26,7 @@ kotlin.cocoapods {
         // Optional properties
         // Dynamic framework support
         isStatic = false
-        // Dependency export
-        export(project(":database"))
-        export(project(":model"))
-        export(project(":network"))
-        transitiveExport = false // This is default.
+        linkerOpts += "-lsqlite3"
     }
 }
 

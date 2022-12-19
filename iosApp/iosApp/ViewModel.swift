@@ -8,6 +8,8 @@
 
 import Foundation
 import shared
+import KMPNativeCoroutinesCombine
+import Combine
 
 class ViewModel: ObservableObject {
     @Published var searchTerm: String = "sunset"
@@ -16,25 +18,24 @@ class ViewModel: ObservableObject {
     @Published private(set) var isSearching = false
     
     private let deps = Dependencies()
-    private var searchTask: Task<Void, Never>?
+    private var cancelables = Set<AnyCancellable>()
     
-    @MainActor
-    func executeQuery() async {
-        searchTask?.cancel()
-        let currentSearchTerm = searchTerm.trimmingCharacters(in: .whitespaces)
-        if currentSearchTerm.isEmpty {
-            result = []
-            isSearching = false
-        }
-        else {
-            searchTask = Task {
-                isSearching = true
-                result = (try? await deps.photosRepo.getPhotos(query: searchTerm)) ?? []
-                print(">> [iOS] Received list: \(result)")
-                if !Task.isCancelled {
-                    isSearching = false
-                }
-            }
-        }
+    init() {
+        let cancelable = $searchTerm
+            .removeDuplicates()
+            .flatMap { [self] in createPublisher(for: deps.photosRepo.getPhotosNative(query: $0)) }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: {
+                print(">> [iOS] Error: \($0)")
+            }, receiveValue: { [weak self] in
+                print(">> [iOS] Success, photos: \($0)")
+                self?.result = $0
+            })
+        
+        cancelables.insert(cancelable)
+    }
+    
+    deinit {
+        cancelables.forEach { $0.cancel() }
     }
 }
