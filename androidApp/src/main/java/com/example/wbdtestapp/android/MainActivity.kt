@@ -3,50 +3,32 @@ package com.example.wbdtestapp.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.example.wbdtestapp.di.Dependencies
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.wbdtestapp.android.composables.DetailsScreen
+import com.example.wbdtestapp.android.composables.SearchResultsScreen
 
 
 class MainActivity : ComponentActivity() {
-    private val dependencies by lazy { Dependencies(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
             MyApplicationTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
-                ) {
-                    GreetingView("Test", dependencies)
+                NavHost(navController = navController, startDestination = "search") {
+                    composable("search") {
+                        SearchResultsScreen(onNavigateToDetails = { imageId ->
+                            navController.navigate("details/${imageId}")
+                        })
+                    }
+                    composable(
+                        "details/{imageId}", arguments = listOf(navArgument("imageId") { type = NavType.LongType })
+                    ) { navBackStackEntry -> DetailsScreen(navBackStackEntry.arguments?.getLong("imageId")) }/*...*/
                 }
             }
         }
-    }
-}
-
-@Composable
-fun GreetingView(text: String, dependencies: Dependencies) {
-    val scope = rememberCoroutineScope()
-    var searchQuery: String by remember { mutableStateOf("sunset") }
-
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = text)
-        TextField(value = searchQuery, onValueChange = { searchQuery = it })
-        Button(enabled = searchQuery.isNotEmpty(), content = {
-            Text("Click me to send an API request")
-        }, onClick = {
-            scope.launch {
-                println(">> Executing query=$searchQuery...")
-                dependencies.photosRepo.getPhotos(searchQuery).collectLatest { photos ->
-                    println(">> Received in UI: $photos")
-                }
-            }
-        })
     }
 }

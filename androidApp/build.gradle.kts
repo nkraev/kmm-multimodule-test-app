@@ -31,6 +31,8 @@ android {
     }
 }
 
+val navVersion = "2.5.3"
+
 dependencies {
     implementation(project(":shared"))
     implementation("androidx.compose.ui:ui:1.3.2")
@@ -39,4 +41,5 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.3.1")
     implementation("androidx.compose.material:material:1.3.1")
     implementation("androidx.activity:activity-compose:1.6.1")
+    implementation("androidx.navigation:navigation-compose:$navVersion")
 }
